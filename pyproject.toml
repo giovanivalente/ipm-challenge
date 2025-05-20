@@ -25,7 +25,7 @@ pytest-django = "^4.11.1"
 taskipy = "^1.14.1"
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "ipm_challenge.settings"
+DJANGO_SETTINGS_MODULE = "core.settings"
 pythonpath = "."
 addopts = '-p no:warnings'
 
@@ -48,7 +48,7 @@ target-version = "py313"
 extend-exclude = [
     'migrations',
     'manage.py',
-    'ipm_challenge/settings.py'
+    'core/settings.py'
 ]
 
 [tool.ruff.lint]
@@ -66,6 +66,6 @@ lint = 'ruff check'
 pre_format = 'ruff check --fix'
 format = 'ruff format'
 pre_test = 'task lint'
-test = 'pytest -s -x --cov=ipm_challenge -vv'
+test = 'pytest -s -x --cov=core -vv'
 post_test = 'coverage html'
 runserver = 'python manage.py runserver'
