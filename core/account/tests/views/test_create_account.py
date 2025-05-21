@@ -33,9 +33,12 @@ class TestCreateAccount:
 
         response = self.client.post(self.url, data=payload, format='json')
 
+        expected_message_error = response.data['errors'][0]['details'][0]['message']
+        expected_code_error = response.data['errors'][0]['details'][0]['code']
+
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert response.data['name'][0].code == 'required'
-        assert str(response.data['name'][0]) == 'This field is required.'
+        assert expected_code_error == 'required'
+        assert expected_message_error == 'This field is required.'
 
     @pytest.mark.django_db
     def test_should_raise_validation_error_when_email_is_not_provided(self):
@@ -44,9 +47,12 @@ class TestCreateAccount:
 
         response = self.client.post(self.url, data=payload, format='json')
 
+        expected_message_error = response.data['errors'][0]['details'][0]['message']
+        expected_code_error = response.data['errors'][0]['details'][0]['code']
+
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert response.data['email'][0].code == 'required'
-        assert str(response.data['email'][0]) == 'This field is required.'
+        assert expected_code_error == 'required'
+        assert expected_message_error == 'This field is required.'
 
     @pytest.mark.django_db
     def test_should_raise_validation_error_when_password_is_not_provided(self):
@@ -55,9 +61,12 @@ class TestCreateAccount:
 
         response = self.client.post(self.url, data=payload, format='json')
 
+        expected_message_error = response.data['errors'][0]['details'][0]['message']
+        expected_code_error = response.data['errors'][0]['details'][0]['code']
+
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert response.data['password'][0].code == 'required'
-        assert str(response.data['password'][0]) == 'This field is required.'
+        assert expected_code_error == 'required'
+        assert expected_message_error == 'This field is required.'
 
     @pytest.mark.django_db
     def test_should_raise_validation_error_when_password_do_not_contain_one_uppercase_character(self):
@@ -66,9 +75,10 @@ class TestCreateAccount:
 
         response = self.client.post(self.url, data=payload, format='json')
 
+        expected_message_error = response.data['errors'][0]['details'][0]['message']
+
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert response.data['password'][0].code == 'invalid'
-        assert str(response.data['password'][0]) == 'The password should contain at least one uppercase character.'
+        assert expected_message_error == 'The password should contain at least one uppercase character.'
 
     @pytest.mark.django_db
     def test_should_raise_validation_error_when_password_do_not_contain_one_lowercase_character(self):
@@ -77,9 +87,10 @@ class TestCreateAccount:
 
         response = self.client.post(self.url, data=payload, format='json')
 
+        expected_message_error = response.data['errors'][0]['details'][0]['message']
+
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert response.data['password'][0].code == 'invalid'
-        assert str(response.data['password'][0]) == 'The password should contain at least one lowercase character.'
+        assert expected_message_error == 'The password should contain at least one lowercase character.'
 
     @pytest.mark.django_db
     def test_should_raise_validation_error_when_password_do_not_contain_one_number(self):
@@ -88,9 +99,10 @@ class TestCreateAccount:
 
         response = self.client.post(self.url, data=payload, format='json')
 
+        expected_message_error = response.data['errors'][0]['details'][0]['message']
+
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert response.data['password'][0].code == 'invalid'
-        assert str(response.data['password'][0]) == 'The password should contain at least one number.'
+        assert expected_message_error == 'The password should contain at least one number.'
 
     @pytest.mark.django_db
     def test_should_raise_validation_error_when_password_do_not_contain_one_special_character(self):
@@ -99,9 +111,10 @@ class TestCreateAccount:
 
         response = self.client.post(self.url, data=payload, format='json')
 
+        expected_message_error = response.data['errors'][0]['details'][0]['message']
+
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert response.data['password'][0].code == 'invalid'
-        assert str(response.data['password'][0]) == 'The password should contain at least one special character.'
+        assert expected_message_error == 'The password should contain at least one special character.'
 
     @pytest.mark.django_db
     def test_should_raise_error_when_account_already_exists(self):
@@ -111,6 +124,7 @@ class TestCreateAccount:
 
         response = self.client.post(self.url, data=payload, format='json')
 
+        expected_message_error = response.data['errors'][0]['details']['message']
+
         assert response.status_code == status.HTTP_409_CONFLICT
-        assert response.data['detail'].code == 'error'
-        assert str(response.data['detail']) == 'An account with this email already exists.'
+        assert expected_message_error == 'An account with this email already exists.'
