@@ -31,8 +31,21 @@ def _handle_validation_error(exc: ValidationError, status_code: int) -> Response
 
 
 def _handle_api_exception(exc: APIException, status_code: int) -> Response:
-    code = getattr(exc.detail, 'code', exc.default_code) if hasattr(exc.detail, 'code') else exc.default_code
-    return Response({'errors': [{'code': code, 'details': {'message': str(exc.detail)}}]}, status=status_code)
+    detail = exc.detail
+    code = getattr(detail, 'code', exc.default_code)
+
+    if isinstance(detail, dict):
+        if 'detail' in detail and 'messages' in detail:
+            messages = [str(detail['detail'])]
+        else:
+            messages = [str(v) for v in detail.values()]
+    else:
+        messages = [str(detail)]
+
+    return Response(
+        {'errors': [{'code': code, 'details': {'message': messages[0]}}]},
+        status=status_code,
+    )
 
 
 def _internal_error_response() -> Response:
