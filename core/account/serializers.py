@@ -1,23 +1,15 @@
-import re
+from uuid import UUID
 
 from rest_framework import serializers
+
+from core.shared.exceptions import CustomAPIException
+from core.shared.validators import validate_password
 
 
 class CreateAccountInputSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=255)
     email = serializers.EmailField()
-    password = serializers.CharField(min_length=8, write_only=True)
-
-    def validate_password(self, value):
-        if not re.search(r'[A-Z]', value):
-            raise serializers.ValidationError('The password should contain at least one uppercase character.')
-        if not re.search(r'[a-z]', value):
-            raise serializers.ValidationError('The password should contain at least one lowercase character.')
-        if not re.search(r'\d', value):
-            raise serializers.ValidationError('The password should contain at least one number.')
-        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', value):
-            raise serializers.ValidationError('The password should contain at least one special character.')
-        return value
+    password = serializers.CharField(min_length=8, write_only=True, validators=[validate_password])
 
 
 class AccountOutputSerializer(serializers.Serializer):
@@ -27,3 +19,33 @@ class AccountOutputSerializer(serializers.Serializer):
     is_active = serializers.BooleanField()
     created_at = serializers.DateTimeField()
     updated_at = serializers.DateTimeField()
+
+
+class AccountIdInputSerializer(serializers.Serializer):
+    account_id = serializers.CharField()
+
+    def validate_account_id(self, value: str) -> UUID:
+        try:
+            return UUID(value)
+        except (ValueError, TypeError) as exc:
+            raise CustomAPIException('Account ID is not a valid UUID.') from exc
+
+
+# class UpdateAccountInputSerializer(serializers.Serializer):
+#     name = serializers.CharField(max_length=255, required=False)
+#     is_active = serializers.BooleanField(required=False)
+#     current_password = serializers.CharField(write_only=True, required=False)
+#     password = serializers.CharField(min_length=8, write_only=True, required=False, validators=[validate_password])
+#
+#     def validate(self, attrs):
+#         password = attrs.get("password")
+#         current_password = attrs.get("current_password")
+#
+#         if password:
+#             if not current_password:
+#                 raise serializers.ValidationError({"current_password": "You must provide the current password."})
+#
+#         if current_password and not password:
+#             raise serializers.ValidationError({"password": "You must provide the new password."})
+#
+#         return attrs
