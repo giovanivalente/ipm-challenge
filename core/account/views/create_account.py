@@ -6,7 +6,7 @@ from core.account.factory import AccountFactory
 from core.account.serializers import AccountOutputSerializer, CreateAccountInputSerializer
 
 
-class AccountCreateListAPIView(APIView):
+class CreateAccountAPIView(APIView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.account_factory = AccountFactory.make_create_account()
