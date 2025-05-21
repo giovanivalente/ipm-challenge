@@ -40,9 +40,11 @@ INSTALLED_APPS = [
 
     # Third Part Libs
     'rest_framework',
+    'rest_framework_simplejwt',
 
     # Project Apps
     'core.account',
+    'core.authentication'
 ]
 
 AUTH_USER_MODEL = 'account.AccountModel'
@@ -131,6 +133,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'core.shared.exception_handler.custom_exception_handler',
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
 }
 
 LOGGING = {
