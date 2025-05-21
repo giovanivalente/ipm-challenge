@@ -1,4 +1,4 @@
-from rest_framework import status
+from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -7,6 +7,8 @@ from core.account.serializers import AccountIdInputSerializer, AccountOutputSeri
 
 
 class AccountDetailAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.db_get_account = AccountFactory.make_db_get_account()
