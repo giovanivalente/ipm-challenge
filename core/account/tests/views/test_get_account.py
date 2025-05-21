@@ -35,7 +35,6 @@ class TestGetAccount:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert expected_message_error == 'Authentication credentials were not provided.'
 
-
     @pytest.mark.django_db
     def test_should_raise_error_when_account_id_is_not_a_valid_uuid(self, authenticate):
         url = reverse('account:account-detail', args=['uuid_invalid_format'])
