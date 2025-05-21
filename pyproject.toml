@@ -24,6 +24,7 @@ pytest-sugar = "^1.0.0"
 pytest-django = "^4.11.1"
 taskipy = "^1.14.1"
 ipython = "^9.2.0"
+factory-boy = "^3.3.3"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "core.settings"
@@ -60,7 +61,7 @@ quote-style = "single"
 
 [tool.ruff.lint.per-file-ignores]
 "*/__init__.py" = ["F403", "F401"]
-"*/tests/*" = ["F401", "F811", "S101"]
+"*/tests/*" = ["F401", "F811", "S101", "S105", "PT011"]
 
 [tool.taskipy.tasks]
 lint = 'ruff check'

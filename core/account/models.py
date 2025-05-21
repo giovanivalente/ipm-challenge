@@ -6,9 +6,9 @@ from django.db import models
 
 
 class AccountManager(BaseUserManager):
-    def create_user(self, email, name, password):
+    def create(self, email, name, password):
         if not email:
-            raise ValueError("The email is required.")
+            raise ValueError('The email is required.')
         if not password:
             raise ValueError('The password is required.')
         email = self.normalize_email(email)
@@ -18,7 +18,7 @@ class AccountManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, name, password):
-        user = self.create_user(email, name, password)
+        user = self.create(email, name, password)
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
@@ -41,7 +41,7 @@ class AccountModel(AbstractBaseUser, PermissionsMixin):
         return f'Account - {self.id}'
 
     def __repr__(self):
-        return f"Account id={self.id} name={self.name} email={self.email}"
+        return f'Account id={self.id} name={self.name} email={self.email}'
 
     objects = AccountManager()
 
