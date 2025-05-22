@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core.account.factory import AccountFactory
-from core.account.serializers import AccountIdInputSerializer, AccountOutputSerializer, UpdateAccountInputSerializer
+from core.account.serializers import AccountIdInputSerializer, AccountOutputSerializer, UpdateAccountInputSerializer, \
+    SafeDeleteQueryParamSerializer
 
 
 class AccountDetailAPIView(APIView):
@@ -13,6 +14,10 @@ class AccountDetailAPIView(APIView):
         super().__init__(**kwargs)
         self.db_get_account = AccountFactory.make_db_get_account()
         self.update_account = AccountFactory.make_update_account()
+        self.delete_account = AccountFactory.make_delete_account()
+
+    # TODO: jogar o post pra ca
+    # TODO: remover os account_id e acessar pelo request.user.id pra ter certeza que é o dono da conta
 
     def get(self, request, account_id: str) -> Response:
         serializer = AccountIdInputSerializer(data={'account_id': account_id})
@@ -37,3 +42,20 @@ class AccountDetailAPIView(APIView):
         output_data = AccountOutputSerializer(instance=updated_account).data
 
         return Response(data=output_data, status=status.HTTP_200_OK)
+
+    def delete(self, request, account_id: str) -> Response:
+        serializer = AccountIdInputSerializer(data={'account_id': account_id})
+        serializer.is_valid(raise_exception=True)
+        account_id = serializer.validated_data['account_id']
+
+        # TODO: remover safe_delete
+        serializer = SafeDeleteQueryParamSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        is_safe_delete = serializer.validated_data.get('safe_delete')
+
+        if is_safe_delete:
+            self.update_account.update(account_id=account_id, is_active=False)
+        else:
+            self.delete_account.delete(account_id=account_id)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -24,6 +24,10 @@ class AccountRepository(ABC):
     def check_password(self, account: Account, password: str) -> Account:
         pass  # pragma: no cover
 
+    @abstractmethod
+    def delete_account(self, account: Account) -> None:
+        pass  # pragma: no cover
+
 
 class AccountRepositoryDB(AccountRepository):
     model = AccountModel
@@ -63,3 +67,7 @@ class AccountRepositoryDB(AccountRepository):
         account_model = AccountModel.objects.get(id=account.id)
 
         return account_model.check_password(password)
+
+    def delete_account(self, account: Account) -> None:
+        account_model = AccountModel.objects.get(id=account.id)
+        account_model.delete()

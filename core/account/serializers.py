@@ -49,3 +49,6 @@ class UpdateAccountInputSerializer(serializers.Serializer):
             raise serializers.ValidationError({'password': 'You must provide the new password.'})
 
         return data
+
+class SafeDeleteQueryParamSerializer(serializers.Serializer):
+    safe_delete = serializers.BooleanField(required=False, default=False)
