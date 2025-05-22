@@ -4,17 +4,15 @@ from rest_framework.views import APIView
 
 from core.account.factory import AccountFactory
 from core.account.serializers import (
-    AccountIdInputSerializer,
     AccountOutputSerializer,
     CreateAccountInputSerializer,
-    SafeDeleteQueryParamSerializer,
     UpdateAccountInputSerializer,
 )
 
 
 class AccountDetailAPIView(APIView):
     def get_permissions(self):
-        return [permissions.IsAuthenticated()] if self.request.method != 'POST' else [permissions.AllowAny()]
+        return [permissions.AllowAny()] if self.request.method == 'POST' else [permissions.IsAuthenticated()]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -55,19 +53,7 @@ class AccountDetailAPIView(APIView):
 
         return Response(data=output_data, status=status.HTTP_200_OK)
 
-    def delete(self, request, account_id: str) -> Response:
-        serializer = AccountIdInputSerializer(data={'account_id': account_id})
-        serializer.is_valid(raise_exception=True)
-        account_id = serializer.validated_data['account_id']
-
-        # TODO: remover safe_delete
-        serializer = SafeDeleteQueryParamSerializer(data=request.query_params)
-        serializer.is_valid(raise_exception=True)
-        is_safe_delete = serializer.validated_data.get('safe_delete')
-
-        if is_safe_delete:
-            self.update_account.update(account_id=account_id, is_active=False)
-        else:
-            self.delete_account.delete(account_id=account_id)
+    def delete(self, request) -> Response:
+        self.delete_account.delete(account_id=request.user.id)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
