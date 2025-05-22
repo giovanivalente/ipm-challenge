@@ -135,6 +135,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'core.shared.exception_handler.custom_exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 LOGGING = {
@@ -167,4 +168,10 @@ LOGGING = {
             'propagate': True,
         },
     },
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'IMP API Challenge',
+    'DESCRIPTION': 'Documentação da API',
+    'VERSION': '1.0.0',
 }
