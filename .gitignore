@@ -250,6 +250,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+model_store/
+
 # End of https://www.toptal.com/developers/gitignore/api/python,macos,windows,linux
 
 # Generated using ignr.py - github.com/Antrikshy/ignr.py
