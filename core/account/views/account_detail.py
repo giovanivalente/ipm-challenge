@@ -3,8 +3,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core.account.factory import AccountFactory
-from core.account.serializers import AccountIdInputSerializer, AccountOutputSerializer, UpdateAccountInputSerializer, \
-    SafeDeleteQueryParamSerializer, CreateAccountInputSerializer
+from core.account.serializers import (
+    AccountIdInputSerializer,
+    AccountOutputSerializer,
+    CreateAccountInputSerializer,
+    SafeDeleteQueryParamSerializer,
+    UpdateAccountInputSerializer,
+)
 
 
 class AccountDetailAPIView(APIView):
@@ -39,11 +44,8 @@ class AccountDetailAPIView(APIView):
 
         return Response(data=output_data, status=status.HTTP_200_OK)
 
-    def patch(self, request, account_id: str) -> Response:
-        serializer = AccountIdInputSerializer(data={'account_id': account_id})
-        serializer.is_valid(raise_exception=True)
-        account_id = serializer.validated_data['account_id']
-
+    def patch(self, request) -> Response:
+        account_id = request.user.id
         serializer = UpdateAccountInputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 

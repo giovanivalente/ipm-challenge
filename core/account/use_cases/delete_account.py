@@ -17,7 +17,6 @@ class DeleteAccount:
 
         self._account_repository.delete_account(account)
 
-
     def _get_account_by_id(self, account_id: UUID) -> Account:
         account = self._account_repository.safe_get(id=account_id)
 

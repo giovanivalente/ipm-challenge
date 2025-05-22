@@ -51,5 +51,6 @@ class UpdateAccountInputSerializer(serializers.Serializer):
 
         return data
 
+
 class SafeDeleteQueryParamSerializer(serializers.Serializer):
     safe_delete = serializers.BooleanField(required=False, default=False)

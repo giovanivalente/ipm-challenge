@@ -1,5 +1,3 @@
-from uuid import uuid4
-
 import pytest
 from django.urls import reverse
 from rest_framework import status
@@ -13,7 +11,7 @@ class TestUpdateAccount:
     def setup_method(self):
         self.client = APIClient()
         self.account = AccountModelFactory.create()
-        self.url = reverse('account:account-detail', args=[self.account.id])
+        self.url = reverse('account:account-detail')
 
     @pytest.fixture
     def authenticate(self):
@@ -43,26 +41,6 @@ class TestUpdateAccount:
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert expected_message_error == 'Authentication credentials were not provided.'
-
-    @pytest.mark.django_db
-    def test_should_raise_error_when_account_id_is_not_a_valid_uuid(self, authenticate):
-        url = reverse('account:account-detail', args=['uuid_invalid_format'])
-
-        response = self.client.patch(url, data=self.input_data(), format='json')
-
-        expected_message_error = response.data['errors'][0]['details']['message']
-
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert expected_message_error == 'Account ID is not a valid UUID.'
-
-    @pytest.mark.django_db
-    def test_should_parse_str_id_to_uuid(self, authenticate):
-        url = reverse('account:account-detail', args=[str(self.account.id)])
-
-        response = self.client.patch(url, data=self.input_data(), format='json')
-
-        assert response.status_code == status.HTTP_200_OK
-        assert response.data['id'] == str(self.account.id)
 
     @pytest.mark.django_db
     def test_should_raise_error_when_password_is_provided_and_current_password_not(self, authenticate):
@@ -159,14 +137,3 @@ class TestUpdateAccount:
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert expected_message_error == 'The provided current password is invalid.'
-
-    @pytest.mark.django_db
-    def test_should_raise_error_when_account_is_not_found(self, authenticate):
-        url = reverse('account:account-detail', args=[uuid4()])
-
-        response = self.client.patch(url, data=self.input_data(), format='json')
-
-        expected_message_error = response.data['errors'][0]['details']['message']
-
-        assert response.status_code == status.HTTP_404_NOT_FOUND
-        assert expected_message_error == 'Account not found.'
