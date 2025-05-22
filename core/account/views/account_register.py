@@ -1,4 +1,5 @@
-from rest_framework import permissions, status
+from drf_spectacular.utils import extend_schema
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -7,15 +8,22 @@ from core.account.serializers import (
     AccountOutputSerializer,
     CreateAccountInputSerializer,
 )
+from core.shared.schema_exceptions import STANDARD_ERROR_RESPONSES
 
 
 class AccountRegisterAPIView(APIView):
-    permission_classes = [permissions.AllowAny]
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.create_account = AccountFactory.make_create_account()
 
+    @extend_schema(
+        tags=['Account'],
+        request=CreateAccountInputSerializer,
+        responses={201: AccountOutputSerializer, **STANDARD_ERROR_RESPONSES},
+        summary='Register Account',
+        description='Endpoint to register a new account.',
+        auth=[],
+    )
     def post(self, request) -> Response:
         serializer = CreateAccountInputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
