@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core.account.factory import AccountFactory
-from core.account.serializers import AccountIdInputSerializer, AccountOutputSerializer
+from core.account.serializers import AccountIdInputSerializer, AccountOutputSerializer, UpdateAccountInputSerializer
 
 
 class AccountDetailAPIView(APIView):
@@ -12,6 +12,7 @@ class AccountDetailAPIView(APIView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.db_get_account = AccountFactory.make_db_get_account()
+        self.update_account = AccountFactory.make_update_account()
 
     def get(self, request, account_id: str) -> Response:
         serializer = AccountIdInputSerializer(data={'account_id': account_id})
@@ -24,11 +25,15 @@ class AccountDetailAPIView(APIView):
         return Response(data=output_data, status=status.HTTP_200_OK)
 
     def patch(self, request, account_id: str) -> Response:
-        # serializer = AccountIdInputSerializer(data={'account_id': account_id})
-        # serializer.is_valid(raise_exception=True)
-        # account_id = serializer.validated_data['account_id']
-        #
-        # serializer = UpdateAccountInputSerializer(data=request.data)
-        # serializer.is_valid(raise_exception=True)
+        serializer = AccountIdInputSerializer(data={'account_id': account_id})
+        serializer.is_valid(raise_exception=True)
+        account_id = serializer.validated_data['account_id']
 
-        return Response(status=200)
+        serializer = UpdateAccountInputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        updated_account = self.update_account.update(account_id, **serializer.validated_data)
+
+        output_data = AccountOutputSerializer(instance=updated_account).data
+
+        return Response(data=output_data, status=status.HTTP_200_OK)
