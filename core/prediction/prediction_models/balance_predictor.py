@@ -12,7 +12,6 @@ logger = logging.getLogger(__name__)
 
 
 class BalancePredictor:
-
     def __init__(self, model_path: Path = None):
         self.model_path = model_path or settings.BALANCE_MODEL_PATH
 
