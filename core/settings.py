@@ -43,7 +43,8 @@ INSTALLED_APPS = [
 
     # Project Apps
     'core.account',
-    'core.authentication'
+    'core.authentication',
+    'core.prediction',
 ]
 
 AUTH_USER_MODEL = 'account.AccountModel'
