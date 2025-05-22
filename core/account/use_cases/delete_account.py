@@ -16,6 +16,7 @@ class DeleteAccount:
         account = self._get_account_by_id(account_id)
 
         self._account_repository.delete_account(account)
+        logger.info(f'Account [{account_id}] deleted successfully.')
 
     def _get_account_by_id(self, account_id: UUID) -> Account:
         account = self._account_repository.safe_get(id=account_id)
