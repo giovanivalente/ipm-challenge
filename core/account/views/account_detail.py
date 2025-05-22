@@ -32,11 +32,8 @@ class AccountDetailAPIView(APIView):
 
         return Response(data=output_data, status=status.HTTP_201_CREATED)
 
-    def get(self, request, account_id: str) -> Response:
-        serializer = AccountIdInputSerializer(data={'account_id': account_id})
-        serializer.is_valid(raise_exception=True)
-
-        account = self.db_get_account.get_by_id(account_id=serializer.validated_data['account_id'])
+    def get(self, request) -> Response:
+        account = self.db_get_account.get_by_id(account_id=request.user.id)
 
         output_data = AccountOutputSerializer(instance=account).data
 

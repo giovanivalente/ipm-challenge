@@ -21,6 +21,7 @@ class AccountOutputSerializer(serializers.Serializer):
     updated_at = serializers.DateTimeField()
 
 
+# TODO: delete?
 class AccountIdInputSerializer(serializers.Serializer):
     account_id = serializers.CharField()
 
