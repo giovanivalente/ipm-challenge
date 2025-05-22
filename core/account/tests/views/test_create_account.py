@@ -9,7 +9,7 @@ from core.account.models import AccountModel
 class TestCreateAccount:
     def setup_method(self):
         self.client = APIClient()
-        self.url = reverse('account:create-account')
+        self.url = reverse('account:account-detail')
 
     def input_data(self):
         return {'name': 'client name', 'email': 'testemail@email.com', 'password': 'Password@123'}

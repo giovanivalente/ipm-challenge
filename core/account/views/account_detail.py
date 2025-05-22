@@ -4,20 +4,33 @@ from rest_framework.views import APIView
 
 from core.account.factory import AccountFactory
 from core.account.serializers import AccountIdInputSerializer, AccountOutputSerializer, UpdateAccountInputSerializer, \
-    SafeDeleteQueryParamSerializer
+    SafeDeleteQueryParamSerializer, CreateAccountInputSerializer
 
 
 class AccountDetailAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    def get_permissions(self):
+        return [permissions.IsAuthenticated()] if self.request.method != 'POST' else [permissions.AllowAny()]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.create_account = AccountFactory.make_create_account()
         self.db_get_account = AccountFactory.make_db_get_account()
         self.update_account = AccountFactory.make_update_account()
         self.delete_account = AccountFactory.make_delete_account()
 
-    # TODO: jogar o post pra ca
-    # TODO: remover os account_id e acessar pelo request.user.id pra ter certeza que é o dono da conta
+    def post(self, request) -> Response:
+        serializer = CreateAccountInputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        account = self.create_account.create_new_account(
+            name=serializer.validated_data.get('name'),
+            email=serializer.validated_data.get('email'),
+            password=serializer.validated_data.get('password'),
+        )
+
+        output_data = AccountOutputSerializer(instance=account).data
+
+        return Response(data=output_data, status=status.HTTP_201_CREATED)
 
     def get(self, request, account_id: str) -> Response:
         serializer = AccountIdInputSerializer(data={'account_id': account_id})
