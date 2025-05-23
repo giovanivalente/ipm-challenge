@@ -6,7 +6,6 @@ services:
     container_name: ipm_challenge
     volumes:
       - .:/app
-      - ./ipm-challenge/db.sqlite3:/app/ipm-challenge/db.sqlite3
     ports:
       - "8000:8000"
     environment:
