@@ -4,7 +4,6 @@
 
 Este projeto é uma API REST desenvolvida com Django e Django REST Framework, criada como solução para o desafio técnico da IPM. 
 Ele oferece funcionalidades de autenticação, gerenciamento de contas e predição de saldo futuro com modelo de IA simples.
-
 O modelo de IA do projeto é um modelo simples de regressão linear, treinado para prever o saldo futuro de uma conta 
 bancária com base em dados históricos fornecidos pelo usuário.
 ---
