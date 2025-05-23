@@ -6,6 +6,6 @@ from core.account.views.account_register import AccountRegisterAPIView
 app_name = 'account'
 
 urlpatterns = [
-    path('accounts/register/', AccountRegisterAPIView.as_view(), name='account-register'),
-    path('accounts/', AccountDetailAPIView.as_view(), name='account-detail'),
+    path('account/register/', AccountRegisterAPIView.as_view(), name='account-register'),
+    path('account/', AccountDetailAPIView.as_view(), name='account-detail'),
 ]
