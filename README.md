@@ -29,7 +29,7 @@ O modelo de IA do projeto é um modelo simples de regressão linear, treinado pa
 - **Docker** + **Docker Compose** para containerização
 - **SQLite** como banco de dados local
 - **DRF Spectacular** para documentação automática da API
-- **Joblib** para carregar o modelo de predição
+- **Joblib** para salvar o modelo de predição
 - **Pytest** para testes automatizados
 
 ---
@@ -56,7 +56,7 @@ docker-compose up
 ```
 ⚠️ Ao iniciar, o container executa automaticamente as migrações do Django (python manage.py migrate) e sobe o servidor em http://localhost:8000.
 
-## 📦 Instalação
+## 📦 Instalação sem Docker
 
 ### 1. Clone o repositório
 
@@ -138,6 +138,13 @@ python manage.py runserver
 ### Contas
 
 - `POST /api/v1/account/register/` - Cria uma nova conta de usuário.
+
+A senha precisa conter:
+
+- Mínimo 8 caracteres
+- Uma letra minúscula
+- Uma letra maiúscula
+- Um caractere especial
 
 #### Body
 ```json
