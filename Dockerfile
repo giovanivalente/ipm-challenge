@@ -12,7 +12,7 @@ RUN apt-get update && \
 COPY pyproject.toml poetry.lock ./
 RUN pip install poetry && \
     poetry config virtualenvs.create false && \
-    poetry install --no-root --only main
+    poetry install --no-root --with dev
 
 COPY . .
 
